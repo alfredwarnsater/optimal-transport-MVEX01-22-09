@@ -33,5 +33,5 @@ function calculate_distance_sum(x0, y0, x1, y1, p)
     end
     return s
 end
-print('Hej')
+
 main(9)
