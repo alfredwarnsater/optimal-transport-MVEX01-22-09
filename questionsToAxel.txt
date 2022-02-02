@@ -1,6 +1,7 @@
 Frågor till Axel
 
 1) Feedback på planeringsrapporten.
-2) Går det att använda som en fluidsimulation?
+2) Gruppkontrakt.
 3) Hur detaljerad ska man vara i metoden?
 4) Etiska frågor till axel.
+5) Går det att använda som en fluidsimulation?
