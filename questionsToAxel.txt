@@ -1,2 +1,4 @@
 Frågor till Axel
 
+1) Etiska frågor till axel.
+2) Går det att använda som en fluidsimulation?
