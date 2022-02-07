@@ -1,0 +1,32 @@
+1) Bakgrund varför är det bra med optimaltransport?
+Referenser
+
+3) 	Punkt 2 som sub-punkt till 1
+	Punkt 4 som sub-punkt till 3
+	Punkt 4 som andra punkt.
+	Antingen försätta punktlistan under som sub-punkter
+
+	"men att lägga till mellansteg", vi kan ha bi-
+	Ta bort det och lägg bara till det vi ska göra optimal styrning av en svärm av agenter
+
+6) 	Vilka dåliga aspekter kan man använda detta till.
+	"Fördelarna överväger nackdelarna"
+	Metodutveckling för att lösa ett generellt problem. Finns problem instanser som är problematiska.
+	Finns fler områden som går att använda på ett bra sätt en ett dåligt.
+
+7)	Lägg till gantt schema
+
+Börja litet och ta upp det till större
+
+Börja med bi-marginell lösare sedan gå vidare från det
+
+Avgränsning.
+Kan bli svårt att ha högre än dimension 3, numerisk svårt.
+
+Linnéas anteckningar från samma möte lol
+Tycker det är bra med bakgrunden, men få in vad det används en gång till i slutet efter punkterna.
+Gärna fler referenser, typ bakgrunden får vi gärna få in ngn.
+3. Bra, men highlighta nr 1 och 4. förläng meningarna för o få med 2 och 3 eller ngt typ av indrag. Tipsar om att inte ha med ordet "mellansteg" explicit
+4. inte högre dim än 3 om vi vill
+6. var mer transparant och förklara att de finns negativa saker som de kan användas till, men att fördelarna överväger de negativa
+7. inläsning, skriva rapport, skriva kod, osv (de stora delarna), i ett gantt-schema. skriv en marginell lösare(?)
