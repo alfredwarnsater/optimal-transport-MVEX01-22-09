@@ -1,8 +1,0 @@
-Frågor till Axel
-
-1) Kan man referera till en artikel man inte läst...?
-    ex: Jag läser en rapport där det står "[...] being developed include 
-    slef-driving cars [2] [...]". Kan jag då direkt referera till källa
-    [2] eller måste jag själv in och läsa det från källa [2]. Eller ska
-    jag bara referera till hela artikel där jag läste "[...] being
-    developed include slef-driving cars [2] [...]"?
