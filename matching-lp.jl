@@ -27,5 +27,6 @@ function main(n)
     end
     display(scatter!(x1, y1, color = "red", size = (400, 400), xlims = (0, 1), ylim = (0, 1), legend = false))
 end
-
-main(30)
+@time begin
+    main(200)
+end
