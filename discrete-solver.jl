@@ -6,8 +6,8 @@ using Random, Distributions
 
 gr()
 
-a = pdf.(Normal(10, 3), 0:0.1:20)
-b = pdf.(Normal(5, 1.5), 0:0.1:20)/3 + pdf.(Normal(15, 1.5), 0:0.1:20)/3
+a = pdf.(Normal(10, 3), 0:1:20)
+b = pdf.(Normal(5, 1.5), 0:1:20)/3 + pdf.(Normal(15, 1.5), 0:1:20)/3
 
 a = a / sum(a) * sum(b);
 
