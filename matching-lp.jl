@@ -11,6 +11,8 @@ function main(n)
 
     model = Model(GLPK.Optimizer)
     @variable(model, 0 <= M[1:n, 1:n] <= 1)
+    #The above @variable can be relaxed to M >= 0, this will speed up the
+    #computational time
     @objective(model, Min, sum(sum(c(i, j)*M[i, j] for j in 1:n) for i in 1:n))
     @constraint(model, c1, M*ones(n) .== ones(n))
     @constraint(model, c2, M'*ones(n) .== ones(n))
@@ -27,6 +29,4 @@ function main(n)
     end
     display(scatter!(x1, y1, color = "red", size = (400, 400), xlims = (0, 1), ylim = (0, 1), legend = false))
 end
-@time begin
-    main(200)
-end
+@time main(11)

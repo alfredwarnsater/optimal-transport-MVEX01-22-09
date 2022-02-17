@@ -34,4 +34,4 @@ function calculate_distance_sum(x0, y0, x1, y1, p)
     return s
 end
 
-main(9)
+@time main(11)
