@@ -1,5 +1,5 @@
 # Given the cost tensor C, index set gamma, marginals mu, regularization parameter epsilon and convergence tolerance tol
-# this function computes the transport map M using multimarginal Sinkhorn iterations. 
+# this function computes the transport map M using Sinkhorn iterations. 
 
 function compute_transport_plan_sinkhorn(C, gamma, mu, epsilon, tol)
 
@@ -30,6 +30,34 @@ function compute_transport_plan_sinkhorn(C, gamma, mu, epsilon, tol)
     return K .* compute_U()
 
 end
-C = [0 1 2; 1 0 1; 2 1 0]
-C = C ./ maximum(C)
-M = compute_transport_plan_sinkhorn(C, [1,2], [1 2 4; 4 2 1], 0.01, 0.1)
+
+using Random, Distributions
+include("transport-map-marginal-plot.jl")
+
+# Pretty example
+
+#= a = pdf.(Normal(10, 3), 0:1:20)
+b = pdf.(Normal(5, 1.5), 0:1:20)/3 + pdf.(Normal(15, 1.5), 0:1:20)/3
+#a = a .* 1e5
+b = b .* sum(a) ./ sum(b)
+a = transpose(a)
+b = transpose(b) =#
+
+a = [1 2 3]
+b = [3 2 1]
+
+n = length(a)
+C = zeros(n, n)
+for i in 1:n
+    for j in 1:n
+        C[i, j] = abs(i - j)
+    end
+end 
+
+#C = [0 1 2; 1 0 1; 2 1 0]
+#C = C ./ 1e5 #
+M = compute_transport_plan_sinkhorn(C, [1, 2], [a; b], 0.01, 1e-5)
+
+#M
+
+transport_map_marginal_plot(a, b, M)
