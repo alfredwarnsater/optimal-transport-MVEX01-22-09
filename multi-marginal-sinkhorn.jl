@@ -1,12 +1,11 @@
-# Given the cost tensor C, index set gamma, marginals mu_j and regularization parameter epsilon this function computes
-# the transport map M using multimarginal Sinkhorn iterations.
+# Given the cost tensor C, index set gamma, marginals mu, regularization parameter epsilon and convergence tolerance tol
+# this function computes the transport map M using multimarginal Sinkhorn iterations. 
 
-function compute_transport_plan_sinkhorn(C, gamma, mu, epsilon)
+function compute_transport_plan_sinkhorn(C, gamma, mu, epsilon, tol)
 
     J = ndims(C)
     K = exp.(-C / epsilon)
-    #@show K
-    N = size(C)[1] # Assuming all dimensions are of equal size.
+    N = size(C)[1]  # Assuming all dimensions are of equal size.
     u = ones(J, N)
 
     function compute_U()
@@ -17,24 +16,20 @@ function compute_transport_plan_sinkhorn(C, gamma, mu, epsilon)
                 U[i] = U[i] * u[j, i[j]]
             end
         end
-        #@show U
         return U
     end
 
-    count = 1
-    while count < 1000
-        #for j in gamma
-            U = compute_U()
-            u[1, :] = u[1, :] .* mu[1, :] ./ reshape(sum(K .* U, dims=2), (3, 1))
-            u[2, :] = u[2, :] .* mu[2, :] ./ reshape(sum(K .* U, dims=1), (3, 1))
-            #display(K .* U)
-        #end
-        count = count + 1
+    u_prev = Inf*ones(size(u))
+    while any(abs.(u - u_prev) .> tol)  # Not sure if this is the best way to check for convergence, seems expensive.
+        u_prev = copy(u)
+        for j in gamma
+            all_but_j = filter((x) -> (x != j), 1:J)
+            u[j, :] = u[j, :] .* mu[j, :] ./ reshape(sum(K .* compute_U(), dims=all_but_j), (N, 1))
+        end
     end
-
     return K .* compute_U()
 
 end
 C = [0 1 2; 1 0 1; 2 1 0]
 C = C ./ maximum(C)
-M = compute_transport_plan_sinkhorn(C, [1,2], [1 2 4; 4 2 1], 0.01)
+M = compute_transport_plan_sinkhorn(C, [1,2], [1 2 4; 4 2 1], 0.01, 0.1)
