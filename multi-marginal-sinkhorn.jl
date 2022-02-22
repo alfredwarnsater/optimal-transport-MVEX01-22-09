@@ -5,6 +5,8 @@ function compute_transport_plan_sinkhorn(C, gamma, mu, epsilon, tol)
 
     J = ndims(C)
     K = exp.(-C / epsilon)
+    @show maximum(K)
+    @show minimum(K)
     N = size(C)[1]  # Assuming all dimensions are of equal size.
     u = ones(J, N)
 
@@ -36,28 +38,28 @@ include("transport-map-marginal-plot.jl")
 
 # Pretty example
 
-#= a = pdf.(Normal(10, 3), 0:1:20)
+a = pdf.(Normal(10, 3), 0:1:20)
 b = pdf.(Normal(5, 1.5), 0:1:20)/3 + pdf.(Normal(15, 1.5), 0:1:20)/3
 #a = a .* 1e5
 b = b .* sum(a) ./ sum(b)
 a = transpose(a)
-b = transpose(b) =#
+b = transpose(b)
 
-a = [1 2 3]
-b = [3 2 1]
+#= a = [1 2 3 4 5 6 7 8 9 10 11]
+b = [56 1 1 1 1 1 1 1 1 1 1] =#
 
 n = length(a)
 C = zeros(n, n)
 for i in 1:n
     for j in 1:n
-        C[i, j] = abs(i - j)
+        C[i, j] = abs(i - j)^2
     end
 end 
 
 #C = [0 1 2; 1 0 1; 2 1 0]
-#C = C ./ 1e5 #
-M = compute_transport_plan_sinkhorn(C, [1, 2], [a; b], 0.01, 1e-5)
+C = C ./ sum(C)
+M = compute_transport_plan_sinkhorn(C, [1, 2], [a; b], 0.0001, 0.1)
 
 #M
 
-transport_map_marginal_plot(a, b, M)
+transport_map_marginal_plot(a, b, transpose(M))

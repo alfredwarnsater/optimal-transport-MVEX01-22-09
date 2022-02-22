@@ -9,11 +9,11 @@ include("transport-map-marginal-plot.jl")
 a = pdf.(Normal(10, 3), 0:1:20)
 b = pdf.(Normal(5, 1.5), 0:1:20)/3 + pdf.(Normal(15, 1.5), 0:1:20)/3
 
-a = a / sum(a) * sum(b);
+b = b .* sum(a) ./ sum(b)
 
 n = length(a)
 
-c(i, j) = abs(i - j)
+c(i, j) = abs(i - j)^2 / 32340.0
 
 model = Model(GLPK.Optimizer)
 @variable(model, 0 <= M[1:n, 1:n])
@@ -21,6 +21,7 @@ model = Model(GLPK.Optimizer)
 @constraint(model, c1, M*ones(n) .== b)
 @constraint(model, c2, M'*ones(n) .== a)
 optimize!(model)
+
 best_perm_mat = value.(M)
 
-transport_map_marginal_plot(a, b, best_perm_mat)
+transport_map_marginal_plot(transpose(a), transpose(b), best_perm_mat)
