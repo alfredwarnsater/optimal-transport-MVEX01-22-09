@@ -6,8 +6,10 @@ using Random, Distributions
 
 include("transport-map-marginal-plot.jl")
 
-a = pdf.(Normal(10, 3), 0:1:20)
-b = pdf.(Normal(5, 1.5), 0:1:20)/3 + pdf.(Normal(15, 1.5), 0:1:20)/3
+sizeOfGrid = 20
+
+a = pdf.(Normal(sizeOfGrid/2, 3/20*sizeOfGrid), 0:1:sizeOfGrid-1)
+b = pdf.(Normal(sizeOfGrid/4, 1.5/20*sizeOfGrid), 0:1:sizeOfGrid-1)/3 + pdf.(Normal(sizeOfGrid*3/4, sizeOfGrid*1.5/20), 0:1:sizeOfGrid-1)/3
 
 b = b .* sum(a) ./ sum(b)
 
