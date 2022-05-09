@@ -1,43 +1,25 @@
 using CairoMakie
 
-function plot_results(data, maze)
-    replace!(maze, 0 => -1)
-    replace!(maze, 1 => 0)
-    fig = Figure()
+function plot_results(data, obstacle, filename)
+    n_cols = 8
+    n_rows = ceil(Int32, size(data, 1) / n_cols)
+    replace!(x -> isapprox(x, 0) ? -1 : 0, obstacle)
+    replace!(x -> (x > 0) ? 0 : x, obstacle)
+    size_cm = 4 .* (n_cols, n_rows)
+    size_pt = 28.3465 .* size_cm
+    fig = Figure(resolution = size_pt, fontsize = 12)
     count = 1
-    for row in 1:5
-        for col in 1:5
-            dist = reshape(data[count], isqrt(size(data[count], 1)), :)
-            dist = dist + maze
-            ax, hm = heatmap(fig[row, col][1, 1], dist, colorrange = (0, 1), lowclip = :blue)
-            #Colorbar(fig[1, 1][1, 2], hm)
+    for row in 1:n_rows
+        for col in 1:n_cols
+            dist = reshape(data[count, :], isqrt(size(data[count, :], 1)), :)
+            dist = dist .+ (count == 1 || count == n_rows * n_cols ? 0 : obstacle[count-1, :, :])
+            ax, _ = heatmap(fig[row, col][1, 1], dist, colorrange=(0, maximum(data)), lowclip=:grey70, colormap=:jet)
+            rowgap!(fig.layout, 10)
+            colgap!(fig.layout, 10)
             hidedecorations!(ax)
             count = count + 1
         end
     end
-
-
-#=     ax, hm = heatmap(fig[1, 2][1, 1], xs, ys, zs, colormap = :grays,
-        colorrange = (0, 1), highclip = :red, lowclip = :blue)
-    Colorbar(fig[1, 2][1, 2], hm)
-    
-    ax, hm = contourf(fig[2, 1][1, 1], xs, ys, zs,
-        levels = -1:0.25:1, colormap = :heat)
-    Colorbar(fig[2, 1][1, 2], hm, ticks = -1:0.25:1)
-    
-    ax, hm = contourf(fig[2, 2][1, 1], xs, ys, zs,
-        colormap = :Spectral, levels = [-1, -0.5, -0.25, 0, 0.25, 0.5, 1])
-    Colorbar(fig[2, 2][1, 2], hm, ticks = -1:0.25:1) =#
-    
-    fig
-
-        #plot_array = []
-#=     for i in 1:size(data, 1)
-        dist = reshape(data[i], isqrt(size(data[i], 1)), :)
-        push!(plot_array, heatmap(dist, showaxis=false, ticks=false, legend=false, framestyle = :box,
-            clims = (0, maximum(maximum.(data))), c = :jet))
-    end
-    plot(plot_array..., size = (1000, 1000), link = :both) =#
+    display(fig)
+    save(filename, fig, pt_per_unit = 1)
 end
-
-#plot_results([1])

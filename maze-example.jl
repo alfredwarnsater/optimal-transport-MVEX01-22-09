@@ -5,7 +5,7 @@ using LinearAlgebra
 include("displacement-interpolation-general.jl")
 include("plotting.jl")
 
-epsilon = 0.5
+epsilon = 0.25
 tol = 0.001
 maze3 = [
     1 1 0 0 0
@@ -38,7 +38,7 @@ maze = [
     0 0 0 0 0 0 0 0 0 0 1
 ]
 
-L = 25
+L = 40
 n = size(maze, 1)
 
 pts = hcat(repeat(1:n, inner = n), repeat(1:n, outer = n))
@@ -72,9 +72,14 @@ end
 types = fill('<', L)
 types[1] = '='
 types[L] = '='
-mu = mu
+
+
+
+obstacle = zeros(L, n, n)
+for l in 1:L
+    obstacle[l, :, :] = maze
+end
+
 data = compute_interpolation(C, mu, types, epsilon, tol)
 
-maze = 
-
-plot_results(data, maze)
+plot_results(data, obstacle, 5, 8)
