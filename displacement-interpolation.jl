@@ -1,33 +1,14 @@
 using LinearAlgebra
 
+# Denna funktion löser interpolationsproblemet med hjälp av Sinkhorniterationer.
 function compute_interpolation(C, mu, types, epsilon, tol)
-    L = size(mu, 1)
     N = size(mu, 2)
-    
+    L = size(mu, 1)
+
     K = exp.(-C / epsilon)
     K_inv = inv(K)
     K_trans = transpose(K)
     u = ones(L, N)
-
-    function P(l)
-        function phi_hat(l)
-            ans = 1
-            for i in reverse(1:(l-1))
-                ans = ans * transpose(K) * (i != 1 ? Diagonal(u[i, :]) : u[i, :]) 
-            end
-            return ans
-        end
-
-        function phi(l)
-            ans = 1
-            for i in (l+1):L
-                ans = ans * K * (i != L ? Diagonal(u[i, :]) : u[i, :])
-            end
-            return ans
-        end
-
-        return u[l, :] .* phi_hat(l) .* phi(l)
-    end
 
     function gen_phi()
         phi = ones(L, N)
@@ -38,36 +19,40 @@ function compute_interpolation(C, mu, types, epsilon, tol)
         return phi
     end
 
-    u_prev = Inf * ones(size(u))
     count = 1
-    last_proj = zeros(L, N)
-    while any(abs.(u - u_prev) .> tol)
-        println(count)
-        println(maximum(abs.(u - u_prev)))
+    max_diff = Inf
+    while max_diff > tol  # I denna loop används Sinkhorniterationerna för att beräkna lösningen.
+        print("Iteration round $(count): Max difference: $(max_diff), Selected tolerance: $(tol)\n")
         u_prev = copy(u)
         phi_hat = 1
         phi = gen_phi()
         for l in 1:L
             proj = u[l, :] .* phi_hat .* phi[l, :]
-            last_proj[l, :] = proj
             tmp = mu[l, :] ./ proj[:]
             replace!(tmp, NaN => 1)
-            it = u[l, :] .* tmp
-            if types[l] == '<'
-                u[l, :] = min.(it, 1)
+            u_tmp = u[l, :] .* tmp
+            if types[l] == '<'  # Vi delar upp i fall beroende på typ av bivillkor.
+                u[l, :] = min.(u_tmp, 1)
             elseif types[l] == '='
-                u[l, :] = it
+                u[l, :] = u_tmp
             elseif types[l] == '>'
-                u[l, :] = max.(it, 1)
+                u[l, :] = max.(u_tmp, 1)
             end
             phi_hat = (l != 1 ? K_trans * Diagonal(u[l, :]) : K_trans * u[l, :]) * phi_hat
         end
         count = count + 1
+        max_diff = maximum(abs.(u - u_prev))
     end
-
-    print("count: ")
-    println(count-1)
-    return last_proj
+    
+    phi_hat = 1
+    phi = gen_phi()
+    projs = zeros(L, N)
+    for l in 1:L
+        projs[l, :] = u[l, :] .* phi_hat .* phi[l, :]
+        phi_hat = (l != 1 ? K_trans * Diagonal(u[l, :]) : K_trans * u[l, :]) * phi_hat
+    end
+    
+    return projs
 end
 
 

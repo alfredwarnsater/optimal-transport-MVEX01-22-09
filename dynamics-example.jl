@@ -1,7 +1,7 @@
 using QuadGK
 
-include("plotting.jl")
 include("displacement-interpolation.jl")
+include("plotting.jl")
 
 # Denna funktion beräknar kostnadsmatrisen som motsvarar dynamiken definierad av A och B.
 function cost_matrix(grid_points, A, B)
@@ -13,6 +13,7 @@ function cost_matrix(grid_points, A, B)
         tmp = x_1-exp_A*x_0
         return transpose(tmp)*sigma_inv*tmp
     end
+    # Här beräknas kostnaderna mellan alla par av möjliga tillstånd.
     C = [cost(grid_points[i, :], grid_points[j, :]) for i in 1:N, j in 1:N]
     return C
 end
@@ -41,7 +42,7 @@ function gen_obstacle(N, n_steps)
 
     inside(x) = all((1 .<= x .<= N))
     rotate(p, theta) = [p[1]*cos(theta)-p[2]*sin(theta), p[1]*sin(theta)+p[2]*cos(theta)]
-    snap(x) = round.(Int32, fld.(x, h)) .+ 1
+    snap(x) = round.(Int32, x / h) .+ 1
 
     function transform(pts, t_vec, r_angle)
         t_pts = zeros(size(pts))
@@ -117,9 +118,9 @@ function dynamics_example(N, L, epsilon, tol)
     types[L] = '='
     println("Beräknar interpolation...")
     data = compute_interpolation(C, mu, types, epsilon, tol)
-    println(size(data))
     println("Plottar...")
-    plot_results(data, obstacle, "dynamics-example.pdf")
+    plot_results(data, obstacle, "plots/dynamics-example.pdf", false)
+    return
 end
 
-dynamics_example(10, 40, 0.01, 0.01)
+dynamics_example(100, 40, 0.01, 0.01)
