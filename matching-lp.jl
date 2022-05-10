@@ -2,7 +2,8 @@ using JuMP
 using GLPK
 using Plots
 
-# Denna funktion beräknar och plottar en lösning till matchningsproblemet på enhetskvadraten med linjärprogrammering.
+# Denna funktion beräknar och plottar en lösning till matchningsproblemet på enhetskvadraten 
+# med linjärprogrammering.
 function matching_lp(n, filename)
     x0 = rand(Float64, n)
     y0 = rand(Float64, n)
@@ -26,8 +27,8 @@ function matching_lp(n, filename)
         end
     end
     Plots.scatter!(x0, y0, color = "blue", markersize = 5)
-    display(Plots.scatter!(x1, y1, color = "red", size = (400, 400), xlims = (0, 1), ylim = (0, 1), legend = false,
-        markersize = 5))
+    display(Plots.scatter!(x1, y1, color = "red", size = (400, 400), markersize = 5
+        xlims = (0, 1), ylim = (0, 1), legend = false))
     savefig(filename)
 end
 

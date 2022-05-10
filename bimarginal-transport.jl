@@ -8,13 +8,14 @@ using Plots.PlotMeasures
 function transport_map_marginal_plot(marginal_1, marginal_2, transport_map, filename)
     margin = -20;
     bw = 0.8
-    m1 = bar(transpose(marginal_1), orientation = :vertical, bar_width=bw, yflip=false, bottom_margin=margin*Plots.px, 
-        showaxis=false, ticks=false, legend = false,
+    m1 = bar(transpose(marginal_1), orientation = :vertical, bar_width=bw, yflip=false,
+        bottom_margin=margin*Plots.px, showaxis=false, ticks=false, legend = false,
         color = "red", linecolor= "red")
-    m2 = bar(transpose(marginal_2), orientation = :horizontal, bar_width=bw, xflip=true, right_margin=margin*Plots.px, 
-        showaxis=false, ticks=false, legend = false,
+    m2 = bar(transpose(marginal_2), orientation = :horizontal, bar_width=bw, xflip=true,
+        right_margin=margin*Plots.px, showaxis=false, ticks=false, legend = false,
         color = "blue", linecolor= "blue")
-    hm = Plots.heatmap(transport_map, color = :greys, showaxis=false, ticks=false, legend = false, framestyle = :box)
+    hm = Plots.heatmap(transport_map, color = :greys, showaxis=false, ticks=false,
+        legend = false, framestyle = :box)
 
     l = @layout[_ a; b c{0.7w, 0.7h}]
 
@@ -40,7 +41,8 @@ function bimarginal_transport(N)
     optimize!(model)
     best_perm_mat = value.(M)
 
-    transport_map_marginal_plot(transpose(a), transpose(b), best_perm_mat, "plots/bimarginal_transport.pdf")
+    transport_map_marginal_plot(transpose(a), transpose(b), best_perm_mat,
+        "plots/bimarginal_transport.pdf")
 end
 
 bimarginal_transport(20)

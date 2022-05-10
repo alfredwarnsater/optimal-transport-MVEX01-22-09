@@ -6,7 +6,8 @@ include("plotting.jl")
 # Denna funktion beräknar kostnadsmatrisen som motsvarar dynamiken definierad av A och B.
 function cost_matrix(grid_points, A, B)
     N = size(grid_points, 1)
-    sigma, _ = quadgk(s -> exp(A*(1-s)) * B*transpose(B) * exp(transpose(A)*(1-s)), 0, 1)  # Numerisk integrering.
+    # Numerisk integrering.
+    sigma, _ = quadgk(s -> exp(A*(1-s)) * B*transpose(B) * exp(transpose(A)*(1-s)), 0, 1)
     sigma_inv = inv(sigma)
     exp_A = exp(A)
     function cost(x_0, x_1) 
@@ -65,9 +66,9 @@ function gen_obstacle(N, n_steps)
 
     a_pts = range(0, 2*pi, n_a_pts)
     r_pts = range(0, 1, n_r_pts)
-    obstacle_points = zeros(n_r_pts*n_a_pts, 2)
+    obs_pts = zeros(n_r_pts*n_a_pts, 2)
     for i in 1:n_r_pts
-        obstacle_points[(i-1).*n_a_pts .+ (1:n_a_pts), :] = r_pts[i] .* [x_curve(a_pts) y_curve(a_pts)]
+        obs_pts[(i-1).*n_a_pts .+ (1:n_a_pts), :] = r_pts[i] .*[x_curve(a_pts) y_curve(a_pts)]
     end
 
     xs = range(x_start, x_end, n_steps)
@@ -76,7 +77,7 @@ function gen_obstacle(N, n_steps)
     obstacle = zeros(n_steps, N, N)
 
     for l in range(1, n_steps) 
-        t_pts = transform(obstacle_points, [xs[l], ys[l]], rs[l])
+        t_pts = transform(obs_pts, [xs[l], ys[l]], rs[l])
         obstacle[l, :, :] = gen_obs(t_pts)
     end
 
@@ -105,7 +106,7 @@ function dynamics_example(N, L, epsilon, tol)
     C = cost_matrix(grid_pts, A, B)
     mu = zeros(L, N*N)
     types = fill('-', L)
-    mu[1, :] = reshape([f(row, m, s) for row in eachrow(grid_pts)], 1, :)  # Startfördelningen för exemplet.
+    mu[1, :] = reshape([f(row, m, s) for row in eachrow(grid_pts)], 1, :)  # Startfördelningen.
     types[1] = '='
     total_mass = sum(mu[1, :])
     obstacle = gen_obstacle(N, L-2)  # Vi lägger till ett hinder för agenterna.
@@ -114,7 +115,7 @@ function dynamics_example(N, L, epsilon, tol)
         mu[l, :] = reshape(obstacle[l-1, :, :], 1, :)
         types[l] = '<'
     end
-    mu[L, :] = reshape(total_mass * ones(N, N) / N^2, 1, :)  # Slutfördelningen. En helt homogen fördelning.
+    mu[L, :] = reshape(total_mass * ones(N, N) / N^2, 1, :)  # Slutfördelningen.
     types[L] = '='
     println("Beräknar interpolation...")
     data = compute_interpolation(C, mu, types, epsilon, tol)

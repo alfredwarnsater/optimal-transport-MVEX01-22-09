@@ -21,12 +21,12 @@ function plot_results(data, obstacle, filename, is_maze)
             dist = reshape(data[count, :], isqrt(size(data[count, :], 1)), :)
             if !is_maze
                 dist = dist .+ (count == 1 || count == L ? 0 : obstacle[count-1, :, :])
-                ax, _ = CairoMakie.heatmap(fig[row, col][1, 1], dist, colorrange=(0, maximum(data)), colormap=:jet,
-                lowclip=:grey80, highclip=:red)
+                ax, _ = CairoMakie.heatmap(fig[row, col][1, 1], dist, colormap=:jet,
+                    colorrange=(0, maximum(data)), lowclip=:grey80, highclip=:red)
             else
                 dist = dist .+ obstacle[count, :, :]
-                ax, _ = CairoMakie.heatmap(fig[row, col][1, 1], dist, colorrange=(0, 0.9), colormap=:jet,
-                lowclip=:grey80, highclip=:red)
+                ax, _ = CairoMakie.heatmap(fig[row, col][1, 1], dist, colormap=:jet,
+                    colorrange=(0, 0.9), lowclip=:grey80, highclip=:red)
             end
             rowgap!(fig.layout, 10)
             colgap!(fig.layout, 10)
