@@ -23,8 +23,8 @@ function compute_interpolation(C, mu, types, epsilon, tol)
     max_diff = Inf
     # I denna loop används Sinkhorniterationerna för att beräkna lösningen.
     while max_diff > tol
-        print("Iteration round $(count): Max difference: $(max_diff), 
-            Selected tolerance: $(tol)\n")
+        print("Iterationsrunda $(count): Maxdifferens: $(max_diff), " *
+            "Vald tolerans: $(tol)\n")
         u_prev = copy(u)
         phi_hat = 1
         phi = gen_phi()
