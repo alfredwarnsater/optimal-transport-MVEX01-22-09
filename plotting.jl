@@ -37,6 +37,6 @@ function plot_results(data, obstacle, filename, is_maze)
             break
         end
     end
-    display(fig)
-    save(filename, fig, pt_per_unit = 1)
+    folder = dirname(@__FILE__)
+    save(string(folder,'\\',filename), fig, pt_per_unit = 1)
 end
