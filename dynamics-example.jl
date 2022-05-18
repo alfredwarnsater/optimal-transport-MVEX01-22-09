@@ -83,9 +83,15 @@ function gen_obstacle(N, n_steps)
     rs = range(0, 2*pi, n_steps)
     obstacle = zeros(n_steps, N, N)
 
+    p = Progress(n_steps,
+                 dt=0.5,
+                 desc="Genererar hindret",
+                 barglyphs=BarGlyphs("[=> ]"),
+                 barlen=50)
     for l in range(1, n_steps)
         t_pts = transform(obs_pts, [xs[l], ys[l]], rs[l])
         obstacle[l, :, :] = gen_obs(t_pts)
+        next!(p)
     end
 
     return obstacle
@@ -131,4 +137,4 @@ function dynamics_example(N, L, epsilon, tol)
     return
 end
 
-dynamics_example(10, 8*8, 0.01, 0.01)
+dynamics_example(100, 8*20, 0.01, 0.01)
