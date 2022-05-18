@@ -45,7 +45,7 @@ function compute_interpolation(C, mu, types, epsilon, tol)
         count = count + 1
         max_diff = maximum(abs.(u - u_prev))
     end
-    
+
     phi_hat = 1
     phi = gen_phi()
     projs = zeros(L, N)
@@ -53,9 +53,6 @@ function compute_interpolation(C, mu, types, epsilon, tol)
         projs[l, :] = u[l, :] .* phi_hat .* phi[l, :]
         phi_hat = (l != 1 ? K_trans * Diagonal(u[l, :]) : K_trans * u[l, :]) * phi_hat
     end
-    
+
     return projs
 end
-
-
-

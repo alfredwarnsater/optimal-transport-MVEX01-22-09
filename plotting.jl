@@ -45,7 +45,10 @@ function plot_results(data, obstacle, filename, is_maze)
     foldername = replace(filename,".pdf" => "")
     pathToFolder = string(WD,"\\",foldername,"\\")
     for i in 1:(n_rows*n_cols)
-        global absolutePath = pathToFolder*string(i)*".pdf"
-        save(absolutePath, fig.scene.children[i], pt_per_unit = 1)
+        resize!(fig.scene.children[i],(100,100));
+        absolutePathPNG = pathToFolder*string(i)*".png"
+        absolutePathPDF = pathToFolder*string(i)*".pdf"
+        save(absolutePathPNG, fig.scene.children[i], pt_per_unit = 1)
+        save(absolutePathPDF, fig.scene.children[i], pt_per_unit = 1)
     end
 end

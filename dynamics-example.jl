@@ -131,4 +131,4 @@ function dynamics_example(N, L, epsilon, tol)
     return
 end
 
-dynamics_example(10, 8*3, 0.01, 0.01)
+dynamics_example(10, 8*8, 0.01, 0.01)
