@@ -1,4 +1,5 @@
 using QuadGK
+using ProgressMeter
 
 include("displacement-interpolation.jl")
 include("plotting.jl")
@@ -10,11 +11,17 @@ function cost_matrix(grid_points, A, B)
     sigma, _ = quadgk(s -> exp(A*(1-s)) * B*transpose(B) * exp(transpose(A)*(1-s)), 0, 1)
     sigma_inv = inv(sigma)
     exp_A = exp(A)
-    function cost(x_0, x_1) 
+    function cost(x_0, x_1)
+        next!(p)
         tmp = x_1-exp_A*x_0
         return transpose(tmp)*sigma_inv*tmp
     end
     # Här beräknas kostnaderna mellan alla par av möjliga tillstånd.
+    p = Progress(N^2,
+                 dt=0.5,
+                 desc="Genererar kostnadsmatrisen",
+                 barglyphs=BarGlyphs("[=> ]"),
+                 barlen=50)
     C = [cost(grid_points[i, :], grid_points[j, :]) for i in 1:N, j in 1:N]
     return C
 end
@@ -29,14 +36,14 @@ end
 
 # Denna funktion genererar hindret för agenterna.
 function gen_obstacle(N, n_steps)
-    
+
     # Parametriserad ellips.
     r = 0.2
     x_curve(t) = 2*r*cos.(t)
     y_curve(t) = r*sin.(t)
     x_start, x_end = 0, 1
     y_start, y_end = 0, 1
-    
+
     h = 1 / N
     n_a_pts = 10 * N
     n_r_pts = 10 * N
@@ -76,7 +83,7 @@ function gen_obstacle(N, n_steps)
     rs = range(0, 2*pi, n_steps)
     obstacle = zeros(n_steps, N, N)
 
-    for l in range(1, n_steps) 
+    for l in range(1, n_steps)
         t_pts = transform(obs_pts, [xs[l], ys[l]], rs[l])
         obstacle[l, :, :] = gen_obs(t_pts)
     end
