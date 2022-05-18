@@ -12,8 +12,14 @@ function plot_results(data, obstacle, filename, is_maze)
     global fig = Figure(resolution = size_pt, fontsize = 12)
     count = 1
     done = false
+    p = Progress(n_rows*n_cols,
+                 dt=0.5,
+                 desc="Genererar figuren",
+                 barglyphs=BarGlyphs("[=> ]"),
+                 barlen=50)
     for row in 1:n_rows
         for col in 1:n_cols
+            next!(p)
             if count > L
                 done = true
                 break
