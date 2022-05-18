@@ -9,7 +9,7 @@ function plot_results(data, obstacle, filename, is_maze)
     replace!(x -> (x > 0) ? 0 : x, obstacle)
     size_cm = 4 .* (n_cols, n_rows)
     size_pt = 28.3465 .* size_cm
-    fig = Figure(resolution = size_pt, fontsize = 12)
+    global fig = Figure(resolution = size_pt, fontsize = 12)
     count = 1
     done = false
     for row in 1:n_rows
@@ -38,6 +38,14 @@ function plot_results(data, obstacle, filename, is_maze)
         end
     end
     display(fig)
-    folder = dirname(@__FILE__)
-    save(string(folder,'\\',filename), fig, pt_per_unit = 1)
+    #Hämtar arbetskatalogen
+    WD = dirname(@__FILE__)
+    save(string(WD,"\\",filename), fig, pt_per_unit = 1)
+    #Tar bort .pdf i namnet på filen
+    foldername = replace(filename,".pdf" => "")
+    pathToFolder = string(WD,"\\",foldername,"\\")
+    for i in 1:(n_rows*n_cols)
+        global absolutePath = pathToFolder*string(i)*".pdf"
+        save(absolutePath, fig.scene.children[i], pt_per_unit = 1)
+    end
 end
