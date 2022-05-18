@@ -84,11 +84,11 @@ function gen_obstacle(N, n_steps)
     obstacle = zeros(n_steps, N, N)
 
     p = Progress(n_steps,
-                 dt=0.5,
+                 dt=0.1,
                  desc="Genererar hindret",
                  barglyphs=BarGlyphs("[=> ]"),
                  barlen=50)
-    for l in range(1, n_steps)
+    Threads.@threads for l in range(1, n_steps)
         t_pts = transform(obs_pts, [xs[l], ys[l]], rs[l])
         obstacle[l, :, :] = gen_obs(t_pts)
         next!(p)
@@ -133,8 +133,8 @@ function dynamics_example(N, L, epsilon, tol)
     println("Beräknar interpolation...")
     data = compute_interpolation(C, mu, types, epsilon, tol)
     println("Plottar...")
-    plot_results(data, obstacle, "plots\\dynamics-example.pdf", false)
+    @time plot_results(data, obstacle, "plots\\dynamics-example.pdf", false)
     return
 end
 
-dynamics_example(100, 8*20, 0.01, 0.01)
+dynamics_example(50, 8*21, 0.005, 0.01)
