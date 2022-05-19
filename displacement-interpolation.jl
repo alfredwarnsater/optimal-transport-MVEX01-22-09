@@ -30,7 +30,7 @@ function compute_interpolation(C, mu, types, epsilon, tol)
         phi = gen_phi()
         p = Progress(L,
                      dt=0.1,
-                     desc="Beräknar sinhorn iterationer",
+                     desc="Beräknar sinkhorniterationerna",
                      barglyphs=BarGlyphs("[=> ]"),
                      barlen=50)
         for l in 1:L
