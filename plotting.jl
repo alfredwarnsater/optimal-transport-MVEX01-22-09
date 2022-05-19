@@ -54,7 +54,9 @@ function plot_results(data, obstacle, filename, is_maze)
         resize!(fig.scene.children[i],(100,100));
         absolutePathPNG = pathToFolder*string(i)*".png"
         absolutePathPDF = pathToFolder*string(i)*".pdf"
+        absolutePathSVG = pathToFolder*string(i)*".svg"
         save(absolutePathPNG, fig.scene.children[i], pt_per_unit = 1)
         save(absolutePathPDF, fig.scene.children[i], pt_per_unit = 1)
+        save(absolutePathSVG, fig.scene.children[i], pt_per_unit = 1)
     end
 end

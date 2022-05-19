@@ -28,7 +28,13 @@ function compute_interpolation(C, mu, types, epsilon, tol)
         u_prev = copy(u)
         phi_hat = 1
         phi = gen_phi()
+        p = Progress(L,
+                     dt=0.1,
+                     desc="Beräknar sinhorn iterationer",
+                     barglyphs=BarGlyphs("[=> ]"),
+                     barlen=50)
         for l in 1:L
+            next!(p)
             proj = u[l, :] .* phi_hat .* phi[l, :]
             tmp = mu[l, :] ./ proj[:]
             replace!(tmp, NaN => 1)

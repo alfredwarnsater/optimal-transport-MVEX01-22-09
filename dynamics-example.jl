@@ -133,8 +133,8 @@ function dynamics_example(N, L, epsilon, tol)
     println("Beräknar interpolation...")
     data = compute_interpolation(C, mu, types, epsilon, tol)
     println("Plottar...")
-    @time plot_results(data, obstacle, "plots\\dynamics-example.pdf", false)
+    plot_results(data, obstacle, "plots\\dynamics-example.pdf", false)
     return
 end
 
-dynamics_example(50, 8*21, 0.005, 0.01)
+@time dynamics_example(130, 8*19, 0.001, 0.01)
