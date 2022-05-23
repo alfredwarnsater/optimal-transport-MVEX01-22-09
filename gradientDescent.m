@@ -19,7 +19,7 @@ Z = f(X,Y);
 %subplot(1,2,2)
 contour(X,Y,Z,'LineWidth',2.5)
 axis([-2 -0.05 -1.5 1.5])
-title('Example of gradient descent', 'FontSize', 27)
+title('Exempel på koordinatvis optimering', 'FontSize', 27)
 xlabel('x', 'FontSize', 20)
 ylabel('y', 'FontSize', 20)
 grid on
@@ -31,8 +31,8 @@ grid on
 %h = 0.2;
 
 start = [-1.5;0.88];
-maxItt = 7;
-h = 1;
+maxItt = 15;
+h = 0.8;
 
 [px, py] = gradient(Z);
 
@@ -41,11 +41,13 @@ cordValues = [start,cordValues];
 
 for i = 1:maxItt
     gradValues = -fGrad(cordValues(:,i));
+    gradValues(mod(i,2)+1) = 0;
     cordValues(:,i+1) = cordValues(:,i) + gradValues*h;
 end
 
 hold on
 plot(cordValues(1,:),cordValues(2,:),'O-','color', 'r','LineWidth',2,'MarkerSize',12)
+plot(cordValues(1,1),cordValues(2,1),'O','color', 'b', 'MarkerSize',16,'MarkerFaceColor','b')
 hold off
 
 
